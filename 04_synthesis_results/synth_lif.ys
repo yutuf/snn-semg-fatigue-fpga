@@ -1,0 +1,3 @@
+read_verilog lif_neuron.v
+synth_ice40
+stat

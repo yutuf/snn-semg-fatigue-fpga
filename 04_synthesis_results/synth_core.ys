@@ -1,0 +1,3 @@
+read_verilog -sv snn_fc_core.v
+synth_ice40 -top snn_fc_core -dsp -json snn_fc_core.json
+stat

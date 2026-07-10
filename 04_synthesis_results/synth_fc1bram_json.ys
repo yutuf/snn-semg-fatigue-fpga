@@ -1,0 +1,3 @@
+read_verilog snn_fc_core_bram.v
+synth_ice40 -dsp -top snn_fc_core_bram
+write_json fc1bram_pnr.json

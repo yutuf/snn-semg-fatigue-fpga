@@ -1,0 +1,3 @@
+read_verilog snn_fc_layer.v
+synth_ice40 -dsp -top snn_fc_layer
+write_json snn_fc.json

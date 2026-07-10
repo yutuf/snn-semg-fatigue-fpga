@@ -1,0 +1,44 @@
+{
+  "description": "13-subject Leave-One-Subject-Out (LOSO) cross-validation results for SNN vs iso-architecture CNN on Cerqueira et al. (2024) sEMG binary fatigue task (Rested vs Fatigued). 5-second STFT windows, spectrogram front-end. Run across 5 Colab accounts (2026-07-08); each subject held out exactly once. Confusion matrices: rows = true [Rested, Fatigued], cols = predicted. Total windows across all folds = 12370.",
+  "protocol": "leave_one_subject_out",
+  "window_sec": 5.0,
+  "n_subjects": 13,
+  "total_windows": 12370,
+  "accounts": [
+    {
+      "held_out_subjects": [1, 2, 3],
+      "per_subject_acc": {"1": {"snn": 71.6, "cnn": 72.3}, "2": {"snn": 64.9, "cnn": 63.5}, "3": {"snn": 82.2, "cnn": 83.2}},
+      "snn_confusion": [[1577, 504], [336, 833]],
+      "cnn_confusion": [[1546, 535], [300, 869]],
+      "mcnemar_table": {"both_correct": 2186, "snn_only_correct": 224, "cnn_only_correct": 229, "both_wrong": 611}
+    },
+    {
+      "held_out_subjects": [4, 5, 6],
+      "per_subject_acc": {"4": {"snn": 80.9, "cnn": 83.8}, "5": {"snn": 82.7, "cnn": 78.3}, "6": {"snn": 85.9, "cnn": 86.6}},
+      "snn_confusion": [[1130, 132], [223, 654]],
+      "cnn_confusion": [[1148, 114], [238, 639]],
+      "mcnemar_table": {"both_correct": 1652, "snn_only_correct": 132, "cnn_only_correct": 135, "both_wrong": 220}
+    },
+    {
+      "held_out_subjects": [7, 8, 9],
+      "per_subject_acc": {"7": {"snn": 76.1, "cnn": 77.4}, "8": {"snn": 73.8, "cnn": 70.2}, "9": {"snn": 86.3, "cnn": 86.6}},
+      "snn_confusion": [[1055, 219], [374, 1095]],
+      "cnn_confusion": [[1054, 220], [406, 1063]],
+      "mcnemar_table": {"both_correct": 1969, "snn_only_correct": 181, "cnn_only_correct": 148, "both_wrong": 445}
+    },
+    {
+      "held_out_subjects": [10, 11],
+      "per_subject_acc": {"10": {"snn": 74.0, "cnn": 61.9}, "11": {"snn": 89.5, "cnn": 84.0}},
+      "snn_confusion": [[455, 22], [294, 1018]],
+      "cnn_confusion": [[445, 32], [437, 875]],
+      "mcnemar_table": {"both_correct": 1271, "snn_only_correct": 202, "cnn_only_correct": 49, "both_wrong": 267}
+    },
+    {
+      "held_out_subjects": [12, 13],
+      "per_subject_acc": {"12": {"snn": 80.0, "cnn": 79.9}, "13": {"snn": 72.5, "cnn": 84.3}},
+      "snn_confusion": [[926, 364], [215, 944]],
+      "cnn_confusion": [[1092, 198], [242, 917]],
+      "mcnemar_table": {"both_correct": 1748, "snn_only_correct": 122, "cnn_only_correct": 261, "both_wrong": 318}
+    }
+  ]
+}

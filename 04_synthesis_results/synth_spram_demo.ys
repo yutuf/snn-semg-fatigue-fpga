@@ -1,0 +1,3 @@
+read_verilog spram_conv1_weights.v
+synth_ice40 -top spram_conv1_weights
+stat

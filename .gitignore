@@ -1,0 +1,17 @@
+# build / sim artifacts
+build/
+*.sim
+*.vcd
+__pycache__/
+*.pyc
+
+# downloaded dataset (3 GB, fetched by 00_dataset/download_dataset.py)
+00_dataset/raw_data/
+00_dataset/preprocessed.pt
+00_dataset/companion_files_bundled/*
+!00_dataset/companion_files_bundled/_BURAYA_INECEK.txt
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp

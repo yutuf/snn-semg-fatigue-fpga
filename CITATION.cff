@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: "Energy-Efficient Spiking Neural Networks for Wearable sEMG Muscle-Fatigue Detection"
+abstract: >-
+  First spiking neural network (SNN) approach to surface-EMG muscle-fatigue
+  detection, with rigorous leakage-free leave-one-subject-out evaluation and a
+  bit-exact-verified FPGA RTL implementation. Reproduces accuracy parity with an
+  iso-architecture CNN (78.3% vs 78.0% macro-F1, McNemar p=0.354) at ~28x lower
+  estimated energy.
+type: software
+authors:
+  - given-names: "Yusuf Kerim"
+    family-names: "Kaymakçı"
+    affiliation: "İstinye University"
+  # TODO: add co-authors / supervisor (e.g. İsmail Can Dikmen) in the agreed order before release
+keywords:
+  - spiking neural networks
+  - surface EMG
+  - muscle fatigue
+  - neuromorphic computing
+  - FPGA
+  - energy-efficient inference
+license: MIT
+# After archiving a GitHub release on Zenodo, paste the minted DOI here and in README.md:
+# doi: 10.5281/zenodo.XXXXXXX
+version: "1.0.0"
+date-released: "2026-07-09"

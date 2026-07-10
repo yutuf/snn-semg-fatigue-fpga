@@ -1,0 +1,485 @@
+{
+  "project": "SNN sEMG Muscle-Fatigue Detection - HPEC handoff",
+  "goal": "IEEE HPEC submission: energy-efficient neuromorphic sEMG fatigue inference on verified FPGA RTL",
+  "entry_points": {
+    "human": "README.md / README_HANDOFF.md",
+    "roadmap": "ROADMAP_TO_HPEC.md"
+  },
+  "headline_results": {
+    "task": "binary fatigue (Rested vs Fatigued), 4-ch sEMG",
+    "snn_macro_f1_loso": 78.3,
+    "cnn_macro_f1_loso": 78.0,
+    "mcnemar_p": 0.354,
+    "energy_advantage": "~28x vs iso-CNN (analytical, Horowitz 45nm)",
+    "cycles_per_timestep": 305567,
+    "cycles_per_inference": 60196699,
+    "fmax_mhz": "16-17",
+    "model_params": 136274,
+    "fixed_point": "Q6.10 signed 16-bit"
+  },
+  "open_tasks": [
+    "measured power via Vivado report_power",
+    "confirm int8 accuracy",
+    "fc1 weight-sourcing decision",
+    "write HPEC paper"
+  ],
+  "verified": "All RTL bit-exact vs Python Q6.10 reference (per-layer + full chain). Resource/latency measured, not estimated.",
+  "file_count": 91,
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 315,
+      "desc": "Excludes build artifacts, the 3GB downloaded dataset, and caches from version control."
+    },
+    {
+      "path": "00_dataset/DATASET.md",
+      "bytes": 2497,
+      "desc": "Dataset provenance, DOI, license, citation, download+preprocess instructions."
+    },
+    {
+      "path": "00_dataset/companion_files_bundled/_BURAYA_INECEK.txt",
+      "bytes": 89,
+      "desc": "Placeholder; small companion files land here after download_dataset.py runs."
+    },
+    {
+      "path": "00_dataset/download_dataset.py",
+      "bytes": 3571,
+      "desc": "Fetches the Cerqueira 2024 dataset from Zenodo (use --small to skip the 3GB raw EMG)."
+    },
+    {
+      "path": "00_dataset/preprocess.py",
+      "bytes": 4561,
+      "desc": "Exact raw-CSV -> spike-tensor pipeline (5s window, STFT, delta-encode). Same code as training."
+    },
+    {
+      "path": "01_model/_model_report.txt",
+      "bytes": 5544,
+      "desc": "Full per-tensor parameter dump (shapes, betas, thresholds)."
+    },
+    {
+      "path": "01_model/_prep_report.txt",
+      "bytes": 3744,
+      "desc": "Checkpoint metadata + BN-fold + memory-budget summary."
+    },
+    {
+      "path": "01_model/fpga_weight_budget.json",
+      "bytes": 705,
+      "desc": "Machine-readable arch, betas, thresholds, param counts, memory budget, int8 scales."
+    },
+    {
+      "path": "01_model/prep_weights.py",
+      "bytes": 6061,
+      "desc": "Folds BatchNorm into conv1, quantizes to Q6.10/int8, exports the weight hex files."
+    },
+    {
+      "path": "01_model/read_pth.py",
+      "bytes": 3927,
+      "desc": "Torch-free .pth parser: inspect weights/config without installing PyTorch."
+    },
+    {
+      "path": "01_model/snn_fatigue_final.pth",
+      "bytes": 554112,
+      "desc": "THE trained model checkpoint (FINAL_for_fpga). All cited results depend on this."
+    },
+    {
+      "path": "02_weights_hex/conv1_all_q610.hex",
+      "bytes": 2016,
+      "desc": "Q6.10 16-bit weights/biases for conv1 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/conv1_b_q610.hex",
+      "bytes": 96,
+      "desc": "Q6.10 16-bit weights/biases for conv1 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/conv1_w_int8.hex",
+      "bytes": 1280,
+      "desc": "int8-quantized weights for conv1 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/conv1_w_q610.hex",
+      "bytes": 1920,
+      "desc": "Q6.10 16-bit weights/biases for conv1 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/fc1_b_q610.hex",
+      "bytes": 1536,
+      "desc": "Q6.10 16-bit weights/biases for fc1 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/fc1_w_int8.hex",
+      "bytes": 540672,
+      "desc": "int8-quantized weights for fc1 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/fc1_w_q610.hex",
+      "bytes": 811008,
+      "desc": "Q6.10 16-bit weights/biases for fc1 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/fc2_b_q610.hex",
+      "bytes": 12,
+      "desc": "Q6.10 16-bit weights/biases for fc2 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/fc2_mem_expected.hex",
+      "bytes": 24,
+      "desc": "Weight/expected-vector hex."
+    },
+    {
+      "path": "02_weights_hex/fc2_w_int8.hex",
+      "bytes": 2048,
+      "desc": "int8-quantized weights for fc2 ($readmemh)."
+    },
+    {
+      "path": "02_weights_hex/fc2_w_q610.hex",
+      "bytes": 3072,
+      "desc": "Q6.10 16-bit weights/biases for fc2 ($readmemh)."
+    },
+    {
+      "path": "03_rtl/lif_neuron.v",
+      "bytes": 883,
+      "desc": "Basic LIF neuron (verified fires correctly with learned beta)."
+    },
+    {
+      "path": "03_rtl/lif_tb.v",
+      "bytes": 527,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "03_rtl/snn_conv1_core_bram.v",
+      "bytes": 6868,
+      "desc": "conv1+LIF1 with weight-sharing and zero-padding, membranes in BRAM. Verified bit-exact."
+    },
+    {
+      "path": "03_rtl/snn_conv1_core_bram_tb.v",
+      "bytes": 2357,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "03_rtl/snn_fc2_output.v",
+      "bytes": 3379,
+      "desc": "Output layer (256->2) exposing membranes (classification uses membrane, not spikes). Verified."
+    },
+    {
+      "path": "03_rtl/snn_fc2_output_tb.v",
+      "bytes": 2264,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "03_rtl/snn_fc_core.v",
+      "bytes": 4067,
+      "desc": "Earlier FF-membrane FC core variant (pre-BRAM); kept for reference."
+    },
+    {
+      "path": "03_rtl/snn_fc_core_bram.v",
+      "bytes": 4676,
+      "desc": "Generic time-multiplexed FC+LIF engine, BRAM membranes (used for fc1 528->256). Verified."
+    },
+    {
+      "path": "03_rtl/snn_fc_core_bram_tb.v",
+      "bytes": 2091,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "03_rtl/snn_fc_core_tb.v",
+      "bytes": 2362,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "03_rtl/snn_fc_layer.v",
+      "bytes": 3391,
+      "desc": "Toy-scale (4->2) FC+LIF engine; original P&R Fmax reference."
+    },
+    {
+      "path": "03_rtl/snn_fc_tb.v",
+      "bytes": 1050,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "03_rtl/snn_top.v",
+      "bytes": 5060,
+      "desc": "Full network conv1->fc1->fc2 with sequencing FSM; loads weights via $readmemh. Verified end-to-end."
+    },
+    {
+      "path": "03_rtl/snn_top_tb.v",
+      "bytes": 3007,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "03_rtl/spram_conv1_weights.v",
+      "bytes": 2512,
+      "desc": "Proves the SB_SPRAM256KA boot-load pattern for external weight sourcing."
+    },
+    {
+      "path": "03_rtl/spram_conv1_weights_tb.v",
+      "bytes": 1363,
+      "desc": "Testbench for the corresponding RTL module (self-checking, prints PASS/FAIL)."
+    },
+    {
+      "path": "04_synthesis_results/LATENCY_AND_ENERGY.md",
+      "bytes": 5887,
+      "desc": "All hardware numbers: resource, measured cycle-accurate latency, op counts, energy model."
+    },
+    {
+      "path": "04_synthesis_results/pnr_conv1.txt",
+      "bytes": 1989,
+      "desc": "nextpnr utilization for conv1 core (measured)."
+    },
+    {
+      "path": "04_synthesis_results/pnr_fc1bram.txt",
+      "bytes": 2004,
+      "desc": "nextpnr utilization for fc1 BRAM core (measured)."
+    },
+    {
+      "path": "04_synthesis_results/pnr_fc2.txt",
+      "bytes": 2114,
+      "desc": "nextpnr utilization for fc2 output core (measured)."
+    },
+    {
+      "path": "04_synthesis_results/synth_conv1.ys",
+      "bytes": 82,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_conv1_json.ys",
+      "bytes": 103,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_core.ys",
+      "bytes": 93,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_core_bram.ys",
+      "bytes": 108,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_fc.ys",
+      "bytes": 68,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_fc1bram_json.ys",
+      "bytes": 99,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_fc2.ys",
+      "bytes": 72,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_fc2_json.ys",
+      "bytes": 91,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_fc_json.ys",
+      "bytes": 86,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_lif.ys",
+      "bytes": 43,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_lif_dsp.ys",
+      "bytes": 48,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_spram_demo.ys",
+      "bytes": 77,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "04_synthesis_results/synth_top.ys",
+      "bytes": 116,
+      "desc": "Yosys synthesis script."
+    },
+    {
+      "path": "05_verification/conv1_mem_expected.txt",
+      "bytes": 3179,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/conv1_spike_in.b",
+      "bytes": 792,
+      "desc": "Binary input spike stimulus for a testbench."
+    },
+    {
+      "path": "05_verification/conv1_spikes_expected.txt",
+      "bytes": 3168,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/fc2_mem_expected.hex",
+      "bytes": 24,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/fc2_spike_in.b",
+      "bytes": 1536,
+      "desc": "Binary input spike stimulus for a testbench."
+    },
+    {
+      "path": "05_verification/fc2_spikes_expected.txt",
+      "bytes": 12,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/full_conv1_spike_in.b",
+      "bytes": 792,
+      "desc": "Binary input spike stimulus for a testbench."
+    },
+    {
+      "path": "05_verification/full_conv1_spikes_expected.txt",
+      "bytes": 3168,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/full_fc1_spikes_expected.txt",
+      "bytes": 1536,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/full_fc2_mem_expected.hex",
+      "bytes": 24,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/full_fc2_spikes_expected.txt",
+      "bytes": 12,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/gen_ref.py",
+      "bytes": 2361,
+      "desc": "Python script."
+    },
+    {
+      "path": "05_verification/gen_ref_conv1.py",
+      "bytes": 3384,
+      "desc": "Python Q6.10 golden reference for conv1 (produces expected spike/membrane vectors)."
+    },
+    {
+      "path": "05_verification/gen_ref_fc2.py",
+      "bytes": 2237,
+      "desc": "Python Q6.10 golden reference for fc2."
+    },
+    {
+      "path": "05_verification/gen_ref_full.py",
+      "bytes": 5254,
+      "desc": "Python Q6.10 golden reference for the full conv1->fc1->fc2 chain."
+    },
+    {
+      "path": "05_verification/lat_tb.v",
+      "bytes": 809,
+      "desc": "Latency-measurement testbench: prints cycles/timestep and cycles/inference."
+    },
+    {
+      "path": "05_verification/mem_expected.txt",
+      "bytes": 1533,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "05_verification/spike_in.b",
+      "bytes": 3168,
+      "desc": "Binary input spike stimulus for a testbench."
+    },
+    {
+      "path": "05_verification/spikes_expected.txt",
+      "bytes": 1536,
+      "desc": "Golden expected vector for bit-exact RTL verification."
+    },
+    {
+      "path": "06_results_and_reports/analyze_loso.py",
+      "bytes": 5908,
+      "desc": "Pools the LOSO folds -> accuracy, macro-F1, McNemar p."
+    },
+    {
+      "path": "06_results_and_reports/loso_results.json",
+      "bytes": 2447,
+      "desc": "Raw 13-fold LOSO confusion matrices + per-subject acc + McNemar tables (measured)."
+    },
+    {
+      "path": "06_results_and_reports/training_journey_report.md",
+      "bytes": 33155,
+      "desc": "Full methodology/results narrative; source material for the paper."
+    },
+    {
+      "path": "07_paper/ABSTRACT.md",
+      "bytes": 1888,
+      "desc": "Paste-ready draft abstract with real numbers."
+    },
+    {
+      "path": "07_paper/FIGURES_AND_TABLES.md",
+      "bytes": 2126,
+      "desc": "Figure/table plan, each tied to its real data source + consistency rules."
+    },
+    {
+      "path": "07_paper/PAPER_OUTLINE.md",
+      "bytes": 5804,
+      "desc": "IEEE HPEC paper skeleton with real numbers slotted in + source-material map."
+    },
+    {
+      "path": "08_notebooks/01_SNN_fatigue_pipeline.ipynb",
+      "bytes": 17468,
+      "desc": "Main Colab notebook: dataset download -> preprocess -> train SNN+iso-CNN -> 13-fold LOSO+McNemar -> Horowitz energy. Reproduces the headline result."
+    },
+    {
+      "path": "08_notebooks/02_FPGA_weight_export.ipynb",
+      "bytes": 3396,
+      "desc": "Colab notebook bridging the trained .pth to FPGA hex weights (BN-fold + Q6.10/int8 quantize)."
+    },
+    {
+      "path": "08_notebooks/README.md",
+      "bytes": 1567,
+      "desc": "Explains the two notebooks and how to run/split them on Colab."
+    },
+    {
+      "path": "CITATION.cff",
+      "bytes": 1080,
+      "desc": "Citation metadata; drives GitHub's 'Cite this repository' widget and Zenodo DOI minting."
+    },
+    {
+      "path": "FAQ_ANTICIPATED_QUESTIONS.md",
+      "bytes": 6783,
+      "desc": "Pre-answered reviewer/professor questions (accuracy, binary reframe, RTL correctness, latency, etc.)."
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1320,
+      "desc": "MIT license for the code (dataset is CC-BY, cited separately)."
+    },
+    {
+      "path": "MANIFEST.json",
+      "bytes": 15651,
+      "desc": "This file: machine-readable inventory of every artifact."
+    },
+    {
+      "path": "README.md",
+      "bytes": 2423,
+      "desc": "Repo landing page: result summary, where-to-start table, reproduce steps, how to cite, DOI instructions."
+    },
+    {
+      "path": "README_HANDOFF.md",
+      "bytes": 13177,
+      "desc": "Human entry point: full project map, model, RTL status, memory decision, next steps."
+    },
+    {
+      "path": "ROADMAP_TO_HPEC.md",
+      "bytes": 5373,
+      "desc": "Priority-ordered path to IEEE HPEC submission + checklist + open questions for professor."
+    },
+    {
+      "path": "run_all_tests.py",
+      "bytes": 3351,
+      "desc": "One-command verification: assembles a flat build/ dir and runs every self-checking testbench (confirmed 4/4 PASS against this package)."
+    }
+  ]
+}

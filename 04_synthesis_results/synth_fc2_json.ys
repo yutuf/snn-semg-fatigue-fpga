@@ -1,0 +1,3 @@
+read_verilog snn_fc2_output.v
+synth_ice40 -dsp -top snn_fc2_output
+write_json fc2_pnr.json

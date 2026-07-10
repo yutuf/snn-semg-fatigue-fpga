@@ -1,0 +1,3 @@
+read_verilog snn_conv1_core_bram.v
+synth_ice40 -dsp -top snn_conv1_core_bram
+stat
