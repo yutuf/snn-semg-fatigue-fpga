@@ -12,6 +12,7 @@ authors:
   - given-names: "Yusuf Kerim"
     family-names: "Kaymakçı"
     affiliation: "İstinye University"
+    orcid: "https://orcid.org/0009-0006-1536-3850"
   # TODO: add co-authors / supervisor (e.g. İsmail Can Dikmen) in the agreed order before release
 keywords:
   - spiking neural networks
