@@ -3,9 +3,7 @@
 Reproducibility artifact for the paper. A spiking neural network (SNN) for surface-EMG
 muscle-fatigue detection, taken from raw data all the way to **bit-exact-verified FPGA RTL**.
 
-<!-- After you mint a Zenodo DOI (see below), add its badge here:
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
--->
+[![DOI](https://zenodo.org/badge/1296568854.svg)](https://doi.org/10.5281/zenodo.21297570)
 
 ## Result at a glance
 - **Task:** binary muscle-fatigue detection (Rested vs Fatigued), 4-channel sEMG.
@@ -36,15 +34,9 @@ Fatigue Analysis*, Zenodo **DOI 10.5281/zenodo.14182446**, CC-BY-4.0. Not bundle
 `00_dataset/download_dataset.py` fetches it.
 
 ## How to cite
-See [`CITATION.cff`](CITATION.cff). Once this repo has a Zenodo DOI (below), cite that.
-
-## Getting a citable DOI (for the paper)
-1. Push this repo to GitHub (public).
-2. Log into **[zenodo.org](https://zenodo.org)** with your GitHub account → **Settings →
-   GitHub** → flip the switch **ON** for this repository.
-3. On GitHub, create a **Release** (e.g. tag `v1.0.0`). Zenodo automatically archives it and
-   mints a DOI.
-4. Copy the DOI into `CITATION.cff`, this README's badge, and the paper.
+This artifact is archived on Zenodo: **DOI [10.5281/zenodo.21297570](https://doi.org/10.5281/zenodo.21297570)**.
+See [`CITATION.cff`](CITATION.cff) for the full citation metadata (also used by GitHub's
+"Cite this repository" button).
 
 ## License
 Code: MIT (see [`LICENSE`](LICENSE)). Dataset: CC-BY-4.0, © its original authors.

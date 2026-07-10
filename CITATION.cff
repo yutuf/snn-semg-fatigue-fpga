@@ -21,7 +21,6 @@ keywords:
   - FPGA
   - energy-efficient inference
 license: MIT
-# After archiving a GitHub release on Zenodo, paste the minted DOI here and in README.md:
-# doi: 10.5281/zenodo.XXXXXXX
+doi: 10.5281/zenodo.21297570
 version: "1.0.0"
 date-released: "2026-07-09"

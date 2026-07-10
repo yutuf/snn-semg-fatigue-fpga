@@ -70,7 +70,7 @@ consistency pass (every number in text matches its table), then submit.
 - [ ] All figures generated from real data (no placeholder boxes)
 - [ ] Every number in prose matches its table (consistency pass)
 - [ ] Related-work paragraph explicitly differentiates from the two companion lab papers
-- [ ] Reproducibility statement points to dataset DOI 10.5281/zenodo.14182446 + this artifact
+- [ ] Reproducibility statement points to dataset DOI 10.5281/zenodo.14182446 + this artifact's DOI 10.5281/zenodo.21297570
 - [ ] Page/format limits met for the confirmed venue
 
 ---
